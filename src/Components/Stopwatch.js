@@ -4,17 +4,18 @@ const Stopwatch =()=> {
     const [hour, setHour] = useState(0);
     const [min, setMin] = useState(0);
     const [second, setSecond] = useState(0);
-    const [mSecond, setMsecond] = useState(0);
-    const [stop, setStop] = useState(false);
+    const [stop, setStop] = useState(true);
 
     const onStart = () => {
-        setStop(true);
-    }
-    const onStop = () => {
         setStop(false);
     }
+    const onStop = () => {
+        setStop(true);
+    }
     const onReset = () => {
-
+        setHour(0);
+        setMin(0);
+        setSecond(0);
     }
 
     useEffect(() => {
@@ -22,38 +23,34 @@ const Stopwatch =()=> {
         if(!stop) {
             interval = setInterval(() =>{
                 if (min > 59){
-                    setHour(hour+1);
+                    setHour(hour + 1);
                     setMin(0);
                     clearInterval(interval);
                 }
                 if (second > 59){
-                    setHour(min+1);
+                    setMin(min + 1);
                     setSecond(0);
                     clearInterval(interval);
                 }
-                if (mSecond > 999){
-                    setHour(hour+1);
-                    setMsecond(0);
-                    clearInterval(interval);
+                if (second <= 59) {
+                    setSecond(second + 1);
                 }
-                if (mSecond > 999){
-                    setHour(mSecond+1);
-                }
-            }, 10)
+            }, 1000)
         }
         else{
             clearInterval(interval);
         }
         return () => {
-            clearInterval(interval)
+            clearInterval(interval);
         }
     })
+    
     return (
         <div>
-            <h1>{hour} : {min} : {second} : {mSecond}</h1>
-            <button onClick={onStart}>Start</button>
-            <button onClick={onStop}>Stop</button>
-            <button onClick={onReset}>Reset</button>
+            <h1 className="mb-4 mt-4">{hour} : {min} : {second}</h1>
+            <button onClick={onStart} className="btn btn-primary me-3">Start</button>
+            <button onClick={onStop} className="btn btn-primary me-3">Stop</button>
+            <button onClick={onReset} className="btn btn-primary">Reset</button>
         </div>
     )
 }
